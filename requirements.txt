@@ -1,6 +1,4 @@
 flask
 scikit-learn
-pandas
-numpy
 joblib
 fpdf

@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify, send_file
 import os
 import joblib
-import pandas as pd
-import numpy as np
 import base64
 from datetime import datetime
 from fpdf import FPDF
@@ -101,7 +99,7 @@ def predict():
         pred_prob = None
         if hasattr(model, "predict_proba"):
             probs = model.predict_proba([fv])[0]
-            pred_prob = str(round(float(np.max(probs)), 4))
+            pred_prob = str(round(float(max(probs)), 4))
 
         # Generate PDF
         pdf_bytes = generate_pdf_bytes(

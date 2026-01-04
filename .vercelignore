@@ -1,0 +1,10 @@
+# Vercel Ignore
+.git
+__pycache__
+*.pyc
+*.pdf
+*.csv
+*.jpg
+*.png
+main.py
+model_outputs/prediction_report_*.pdf
