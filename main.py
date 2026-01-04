@@ -112,10 +112,18 @@ def capture_photo(save_path="captured_photo.jpg"):
             print(f"Photo captured and saved to '{save_path}'")
             return save_path
 
-def generate_pdf_report(vitals_dict, prediction_label, prob=None, photo_path=None, out_dir=".", patient_id=None):
+def generate_pdf_report(vitals_dict, prediction_label, prob=None, photo_path=None, out_dir=".", patient_id=None, patient_name=None):
     """Generate a PDF report with vitals, prediction, timestamp, and optional photo."""
-    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    fname = f"prediction_report_{ts}.pdf"
+    # Generate filename as name_id.pdf
+    if patient_name and patient_id:
+        # Sanitize filename (remove special characters)
+        safe_name = "".join(c if c.isalnum() or c in (' ', '-', '_') else '_' for c in patient_name).strip().replace(' ', '_')
+        safe_id = "".join(c if c.isalnum() or c in ('-', '_') else '_' for c in patient_id).strip()
+        fname = f"{safe_name}_{safe_id}.pdf"
+    else:
+        # Fallback to timestamp if name/id not provided
+        ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+        fname = f"prediction_report_{ts}.pdf"
     out_path = os.path.join(out_dir, fname)
 
     pdf = FPDF()
@@ -126,6 +134,8 @@ def generate_pdf_report(vitals_dict, prediction_label, prob=None, photo_path=Non
 
     pdf.set_font("Arial", size=11)
     pdf.cell(0, 8, f"Timestamp: {datetime.now().isoformat(sep=' ', timespec='seconds')}", ln=True)
+    if patient_name:
+        pdf.cell(0, 8, f"Patient Name: {patient_name}", ln=True)
     if patient_id:
         pdf.cell(0, 8, f"Patient ID: {patient_id}", ln=True)
     pdf.ln(3)
@@ -187,7 +197,20 @@ def main():
         print("ERROR while preparing model:", e)
         return
 
+    # Ask for patient name and ID first
+    print("\n=== Patient Information ===")
+    patient_name = input("Enter patient name: ").strip()
+    while not patient_name:
+        print("Patient name is required.")
+        patient_name = input("Enter patient name: ").strip()
+    
+    patient_id = input("Enter patient ID: ").strip()
+    while not patient_id:
+        print("Patient ID is required.")
+        patient_id = input("Enter patient ID: ").strip()
+
     # Ask whether to capture photo
+    print("\n=== Photo Capture ===")
     photo_file = None
     use_cam = input("Do you want to capture a photo from webcam? (y/N): ").strip().lower()
     if use_cam == "y":
@@ -201,10 +224,8 @@ def main():
                 photo_file = None
 
     # Ask for vitals
+    print("\n=== Vital Signs ===")
     vitals = ask_for_vitals()
-
-    # Optional patient ID
-    patient_id = input("Enter patient ID or name (optional): ").strip() or None
 
     # Build feature vector in required order
     fv = [vitals[k] for k in FEATURES]
@@ -237,7 +258,7 @@ def main():
 
     # Generate PDF
     try:
-        pdf_path = generate_pdf_report(vitals, pred_label, prob=pred_prob, photo_path=photo_file, out_dir=".")
+        pdf_path = generate_pdf_report(vitals, pred_label, prob=pred_prob, photo_path=photo_file, out_dir=".", patient_id=patient_id, patient_name=patient_name)
         print(f"\nPDF report saved to: {pdf_path}")
     except Exception as e:
         print("Failed to generate PDF:", e)

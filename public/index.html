@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Covid-19 Intelligent Detection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-globes">
+        <div class="globe globe-1"></div>
+        <div class="globe globe-2"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1><i class="fa-solid fa-virus-covid"></i> COVID-19 <span class="highlight">Detection AI</span></h1>
+            <p>Advanced Machine Learning Diagnostics</p>
+        </header>
+
+        <main>
+            <div class="card glass-panel">
+                <div class="section-title">
+                    <i class="fa-solid fa-user-check"></i> Patient Information
+                </div>
+                <div class="input-group">
+                    <div class="input-wrapper">
+                        <label for="patientName">Full Name</label>
+                        <input type="text" id="patientName" placeholder="e.g. John Doe">
+                    </div>
+                    <div class="input-wrapper">
+                        <label for="patientId">Patient ID</label>
+                        <input type="text" id="patientId" placeholder="e.g. PID-12345">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card glass-panel">
+                <div class="section-title">
+                    <i class="fa-solid fa-camera"></i> Live Vitals Capture
+                </div>
+                
+                <div class="camera-container">
+                    <video id="video" autoplay playsinline></video>
+                    <canvas id="canvas" style="display:none;"></canvas>
+                    <div class="overlay-scan"></div>
+                </div>
+                
+                <div class="camera-controls">
+                    <button id="startCamBtn" class="btn secondary"><i class="fa-solid fa-video"></i> Start Camera</button>
+                    <button id="captureBtn" class="btn primary" disabled><i class="fa-solid fa-shutter"></i> Capture & Analyze</button>
+                    <span id="photoStatus" class="status-text hidden"><i class="fa-solid fa-check"></i> Photo Captured</span>
+                </div>
+            </div>
+
+            <div class="card glass-panel">
+                <div class="section-title">
+                    <i class="fa-solid fa-heart-pulse"></i> Vital Signs
+                </div>
+                <div class="vitals-grid">
+                    <div class="vital-input">
+                        <label>Oxygen Level (%)</label>
+                        <input type="number" id="oxygen" placeholder="98" min="0" max="100" step="0.1">
+                        <i class="fa-solid fa-lungs input-icon"></i>
+                    </div>
+                    <div class="vital-input">
+                        <label>Pulse Rate (BPM)</label>
+                        <input type="number" id="pulse" placeholder="72" min="0" max="250">
+                        <i class="fa-solid fa-heart-pulse input-icon"></i>
+                    </div>
+                    <div class="vital-input">
+                        <label>Temperature (°C)</label>
+                        <input type="number" id="temperature" placeholder="36.5" min="30" max="45" step="0.1">
+                        <i class="fa-solid fa-temperature-high input-icon"></i>
+                    </div>
+                </div>
+            </div>
+
+            <button id="analyzeBtn" class="btn cta pulse-animation">
+                RUN DIAGNOSIS <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+            <!-- Results Modal -->
+            <div id="resultModal" class="modal hidden">
+                <div class="modal-content glass-panel">
+                    <span class="close">&times;</span>
+                    <div class="result-header">
+                        <h2>Analysis Complete</h2>
+                        <div id="resultIcon" class="status-icon"></div>
+                    </div>
+                    
+                    <div class="result-body">
+                        <div class="prediction-box">
+                            <span class="label">Prediction</span>
+                            <h3 id="predictionText">--</h3>
+                        </div>
+                        <div class="confidence-box">
+                            <span class="label">Confidence</span>
+                            <h3 id="confidenceText">--</h3>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <a id="downloadPdf" href="#" class="btn secondary" download="report.pdf">
+                            <i class="fa-solid fa-file-pdf"></i> Download Official Report
+                        </a>
+                        <button class="btn primary" onclick="location.reload()">New Process</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
